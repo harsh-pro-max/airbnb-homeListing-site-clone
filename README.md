@@ -18,23 +18,21 @@
 </div>
 
 ---
-
 ## 📸 Demo
 
 <div align="center">
   
   ### 🏡 Browse Listings
-  <img src="screenshots/home.png" alt="Browse all property listings" width="750"/>
+  <img src="gallery/img1.png" alt="Browse all property listings" width="750"/>
   
   ### 🔍 Listing Details & Reviews
-  <img src="screenshots/listing-detail.png" alt="Property details with user reviews" width="750"/>
+  <img src="gallery/img2.png" alt="Listing details with reviews" width="750"/>
   
   ### 🔐 User Authentication
-  <img src="screenshots/auth.png" alt="Secure signup and login system" width="750"/>
-  
-  > **Note:** Add your actual screenshots to `/screenshots` folder
+  <img src="gallery/img3.png" alt="Secure signup and login system" width="750"/>
 
 </div>
+
 
 ---
 
