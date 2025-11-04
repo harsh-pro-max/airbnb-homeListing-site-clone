@@ -98,3 +98,9 @@ body{
 .edit-btn{
     background-color: #fe424d !important;
 }
+
+/* Map */
+#map { 
+    height: 400px;
+    width: 100vh;
+}
