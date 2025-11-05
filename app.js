@@ -3,6 +3,7 @@ if(process.env.NODE_ENV != "production"){
 }
 // console.log(process.env.SECRET);
 
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -17,9 +18,11 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
+
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
+
 
 const dbUrl = process.env.ATLASDB_URL;
 main()
@@ -30,9 +33,11 @@ main()
     console.log(err);
   });
 
+
 async function main() {
   await mongoose.connect(dbUrl);
 }
+
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -40,6 +45,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
+
 
 const store=MongoStore.create({
   mongoUrl:dbUrl,
@@ -49,9 +55,11 @@ const store=MongoStore.create({
   touchAfter:24 * 3600,
 });
 
+
 store.on("error",(err)=>{
   console.log("ERROR in MONGO SESSION STORE",err);
 });
+
 
 const sessionOptions = {
   store,
@@ -64,23 +72,21 @@ const sessionOptions = {
     httpOnly:true,
   },
 };
-// root route
-app.get("/", (req, res) => {
-  res.redirect("/listings");
-});
-
 
 
 // middlewares
 app.use(session(sessionOptions));
 app.use(flash());
 
+
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 
+
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
 
 app.use((req,res,next)=>{
   res.locals.success = req.flash("success");
@@ -90,16 +96,11 @@ app.use((req,res,next)=>{
 });
 
 
-// user demo route
-// app.get("/demouser", async (req,res)=>{
-//   let fakeUser = new User({
-//     email: "student@gmail.com",
-//     username: "delta-student"
-//   });
+// root route - MOVED HERE (after all middleware)
+app.get("/", (req, res) => {
+  res.redirect("/listings");
+});
 
-//   let registeredUser = await User.register(fakeUser, "helloworld");
-//   res.send(registeredUser);
-// });
 
 // use all routes 
 app.use("/listings",listingRouter);
@@ -109,10 +110,12 @@ app.use("/",userRouter);
 
 
 
+
 // catch-all route for 404
 app.all("/*splat", (req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));
 });
+
 
 // centralized error handler
 app.use((err, req, res, next) => {
@@ -120,6 +123,7 @@ app.use((err, req, res, next) => {
 //   res.status(statusCode).send(message);
     res.status(statusCode).render("error.ejs",{message});
 });
+
 
 app.listen(8080, () => {
   console.log("server is listening to port 8080");
