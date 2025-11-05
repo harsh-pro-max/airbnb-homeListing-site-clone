@@ -106,7 +106,7 @@ app.get("/", (req, res) => {
 app.use("/listings",listingRouter);
 // use all review routes
 app.use("/listings/:id/reviews",reviewRouter);
-app.use("/",userRouter);
+app.use(userRouter);
 
 
 
