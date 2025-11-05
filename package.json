@@ -1,36 +1,47 @@
 {
-  "name": "airbnb-homeListing-site-clone",
+  "name": "airbnb-homelisting-site-clone",
   "version": "1.0.0",
   "description": "Airbnb-style home listing clone using Node.js, Express, MongoDB, and EJS.",
   "main": "app.js",
-  "engines": {
-    "node": "22.19.0"
-  },
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+    "airbnb",
+    "listings",
+    "nodejs",
+    "express",
+    "mongodb",
+    "ejs"
+  ],
+  "author": "Harsh Kushwah",
+  "license": "MIT",
   "dependencies": {
     "@mapbox/mapbox-sdk": "^0.16.2",
     "cloudinary": "^1.41.3",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^5.1.0",
-    "cookie-parser": "^1.4.7",
-    "dotenv": "^17.2.3",
-    "ejs": "^3.1.10",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.1",
+    "ejs": "^3.1.9",
     "ejs-mate": "^4.0.0",
-    "express": "^5.1.0",
-    "express-session": "^1.18.2",
-    "joi": "^18.0.1",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "joi": "^17.12.0",
     "method-override": "^3.0.0",
-    "mongoose": "^8.18.2",
-    "multer": "^2.0.2",
+    "mongoose": "^8.1.0",
+    "multer": "^1.4.5-lts.1",
     "multer-storage-cloudinary": "^4.0.0",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^8.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
   }
 }
