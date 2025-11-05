@@ -1,13 +1,14 @@
 {
+  "name": "airbnb-homeListing-site-clone",
+  "version": "1.0.0",
+  "description": "Airbnb-style home listing clone using Node.js, Express, MongoDB, and EJS.",
+  "main": "app.js",
   "engines": {
     "node": "22.19.0"
   },
-  "name": "airbnb-homeListing-site-clone",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
