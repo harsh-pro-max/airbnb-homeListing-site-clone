@@ -1,62 +1,103 @@
 <% layout("/layouts/boilerplate.ejs") %>
 <body>
-    
-    <div class="row">
+
+<div class="row">
   <div class="col-8 offset-2">
     <br>
-    <h3>Create a new listig</h3>
+    <h3>Create a new listing</h3>
 
     <form 
       action="/listings" 
       method="POST" 
-      novalidate 
-      class="needs-validation" 
       enctype="multipart/form-data"
+      novalidate
     >
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
-        <input type="text" name="listing[title]" placeholder="add a catchy title" class="form-control" required>
-        <div class="valid-feedback">Title looks good! </div>
+        <input 
+          type="text" 
+          name="listing[title]" 
+          class="form-control" 
+          placeholder="Add a catchy title"
+          required
+        >
       </div>
 
       <div class="mb-3">
-        <label for="description" class="form-label">Description</label>
-        <textarea name="listing[description]" placeholder="enter description" class="form-control" required></textarea>
-        <div class="invalid-feedback">Please enter a short description</div>
+        <label class="form-label">Description</label>
+        <textarea 
+          name="listing[description]" 
+          class="form-control" 
+          placeholder="Enter description"
+          required
+        ></textarea>
       </div>
 
-      <!-- <div class="mb-3">
-        <label for="image" class="form-label">Image Link</label>
-        <input type="text" name="listing[image]" placeholder="enter your url/link" class="form-control">
-      </div> -->
+      <div class="mb-3">
+        <label class="form-label">Upload Image</label>
+        <input 
+          type="file" 
+          name="listing[image]" 
+          class="form-control"
+        >
+      </div>
 
       <div class="mb-3">
-        <label for="image" class="form-label">Upload Listing Image</label>
-        <input type="file" name="listing[image]" class="form-control" >
-        
+        <label class="form-label">Category</label>
+        <select name="listing[category]" class="form-control" required>
+          <option value="">Select Category</option>
+          <option value="Trending">Trending</option>
+          <option value="Rooms">Rooms</option>
+          <option value="Iconic cities">Iconic cities</option>
+          <option value="Amazing Views">Amazing Views</option>
+          <option value="Amazing pools">Amazing pools</option>
+          <option value="Mountain">Mountain</option>
+          <option value="Beach">Beach</option>
+          <option value="Lakefront">Lakefront</option>
+          <option value="Farms">Farms</option>
+        </select>
       </div>
 
       <div class="row">
         <div class="mb-3 col-12 col-md-4">
-          <label for="price" class="form-label">Price</label>
-          <input name="listing[price]" placeholder="1200" class="form-control" required>
-          <div class="invalid-feedback">price should be valid</div>
+          <label class="form-label">Price</label>
+          <input 
+            type="number"
+            name="listing[price]" 
+            class="form-control" 
+            placeholder="1200"
+            required
+          >
         </div>
+
         <div class="mb-3 col-12 col-md-8">
-          <label for="country" class="form-label">Country</label>
-          <input type="text" name="listing[country]" placeholder="India" class="form-control" required>
-          <div class="invalid-feedback">country name should be valid</div>
+          <label class="form-label">Country</label>
+          <input 
+            type="text" 
+            name="listing[country]" 
+            class="form-control" 
+            placeholder="India"
+            required
+          >
         </div>
       </div>
 
       <div class="mb-3">
-        <label for="location" class="form-label">Location</label>
-        <input type="text" name="listing[location]" placeholder="Patna" class="form-control" required>
-        <div class="invalid-feedback">location should be valid</div>
+        <label class="form-label">Location</label>
+        <input 
+          type="text" 
+          name="listing[location]" 
+          class="form-control" 
+          placeholder="Patna"
+          required
+        >
       </div>
 
-      <button class="btn btn-dark add-btn">Add</button>
+      <button class="btn btn-dark">Add</button>
       <br><br>
     </form>
+
   </div>
 </div>
+
+</body>

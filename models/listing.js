@@ -15,20 +15,39 @@ const listingSchema = new Schema({
   price: Number,
   location: String,
   country: String,
+
+  category: {
+    type: String,
+    enum: [
+      "Trending",
+      "Rooms",
+      "Iconic cities",
+      "Amazing Views",
+      "Amazing pools",
+      "Mountain",
+      "Beach",
+      "Lakefront",
+      "Farms"
+    ],
+    required: true
+  },
+
   reviews:[
     {
       type : Schema.Types.ObjectId,
       ref: "Review",
     },
   ],
+
   owner:{
     type:Schema.Types.ObjectId,
     ref:"User",
   },
+
   geometry:{
     type:{
-      type:String, //Don't do ` {location: {type:String}}`
-      enum:['Point'], // 'location.type' must be 'Point'
+      type:String,
+      enum:['Point'],
       required:true
     },
     coordinates:{
