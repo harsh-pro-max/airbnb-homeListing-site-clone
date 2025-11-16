@@ -6,10 +6,15 @@ const userSchema = new Schema({
     email:{
         type:String,
         required:true
-    }
-    // some models like username,salting,hash, add in files passport-local-mongoose by default
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    otp: String,
+    otpExpiry: Date
 });
+
 userSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('User',userSchema);
-

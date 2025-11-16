@@ -1,33 +1,35 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/user.js");
 const wrapAsync = require("../utils/wrapAsync");
 const passport = require("passport");
-const { saveRedirectUrl } = require("../middleware.js");
 
 const userController = require("../controllers/users.js");
 
-// combined signup route
+// signup
 router
-    .route("/signup")
-    .get(userController.renderSignup)
-    .post(wrapAsync(userController.signup)
-);
+  .route("/signup")
+  .get(userController.renderSignup)
+  .post(wrapAsync(userController.signup));
 
-// combined login route
+// verify OTP
 router
-    .route("/login")
-    .get(userController.renderLoginForm)
-    .post(
-    saveRedirectUrl,
-    passport.authenticate("local",{
-        failureRedirect: '/login',
-        failureFlash:true,
+  .route("/verify-otp")
+  .get(userController.renderVerifyOTP)
+  .post(wrapAsync(userController.verifyOTP));
+
+// login
+router
+  .route("/login")
+  .get(userController.renderLoginForm)
+  .post(
+    passport.authenticate("local", {
+      failureRedirect: "/login",
+      failureFlash: true,
     }),
     userController.login
-);
+  );
 
-router.get("/logout",userController.logout);
+// logout
+router.get("/logout", userController.logout);
 
 module.exports = router;
-
