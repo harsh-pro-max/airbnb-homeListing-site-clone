@@ -9,20 +9,18 @@ module.exports.signup = async (req, res) => {
     try {
         let { username, email, password } = req.body;
 
-        // Create new user (not verified yet)
         const newUser = new User({
             email,
             username,
             isVerified: false
         });
 
-        // Register user
         const registeredUser = await User.register(newUser, password);
 
         // Generate OTP
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         registeredUser.otp = otp;
-        registeredUser.otpExpiry = Date.now() + 5 * 60 * 1000; // 5 min expiry
+        registeredUser.otpExpiry = Date.now() + 5 * 60 * 1000;
         await registeredUser.save();
 
         // Send OTP email
@@ -68,6 +66,30 @@ module.exports.verifyOTP = async (req, res) => {
     });
 };
 
+// ⭐ RESEND OTP — NEW FUNCTION
+module.exports.resendOTP = async (req, res) => {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+
+    if (!user) {
+        req.flash("error", "User not found.");
+        return res.redirect("/signup");
+    }
+
+    // Create new OTP
+    const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    user.otp = newOtp;
+    user.otpExpiry = Date.now() + 5 * 60 * 1000;
+    await user.save();
+
+    // send new OTP
+    await sendEmail(user.email, newOtp);
+
+    req.flash("success", "New OTP sent successfully!");
+    res.redirect(`/verify-otp?user=${user._id}`);
+};
+
 module.exports.renderLoginForm = (req, res) => {
     res.render("users/login.ejs");
 };
@@ -78,7 +100,7 @@ module.exports.login = async (req, res) => {
         return res.redirect("/login");
     }
     req.flash("success", "Welcome back!");
-    let redirectUrl = res.locals.redirectUrl || "/listings";
+    const redirectUrl = res.locals.redirectUrl || "/listings";
     res.redirect(redirectUrl);
 };
 
