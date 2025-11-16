@@ -22,6 +22,7 @@
   "author": "Harsh Kushwah",
   "license": "MIT",
   "dependencies": {
+    "@getbrevo/brevo": "^3.0.1",
     "@mapbox/mapbox-sdk": "^0.16.2",
     "cloudinary": "^1.41.3",
     "connect-flash": "^0.1.1",
