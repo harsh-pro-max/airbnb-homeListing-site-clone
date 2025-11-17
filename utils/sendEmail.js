@@ -2,31 +2,36 @@ const nodemailer = require("nodemailer");
 
 async function sendEmail(to, otp) {
     try {
+
+        console.log("SMTP LOGIN:", process.env.BREVO_SMTP_LOGIN);
+        console.log("SMTP FROM:", process.env.BREVO_EMAIL_FROM);
+
         const transporter = nodemailer.createTransport({
-            host: process.env.SMTP_HOST,
-            port: process.env.SMTP_PORT,
+            host: process.env.BREVO_SMTP_SERVER,
+            port: Number(process.env.BREVO_SMTP_PORT),
             secure: false,
             auth: {
-                user: process.env.SMTP_LOGIN,
-                pass: process.env.SMTP_PASSWORD,
+                user: process.env.BREVO_SMTP_LOGIN,
+                pass: process.env.BREVO_SMTP_PASSWORD
             },
         });
 
-        await transporter.sendMail({
-            from: process.env.SMTP_FROM,
+        const info = await transporter.sendMail({
+            from: `"Wanderlust" <${process.env.BREVO_EMAIL_FROM}>`,
             to,
-            subject: "Wanderlust Email Verification OTP",
+            subject: "Your Wanderlust OTP Verification Code",
             html: `
-                <h2>Your OTP</h2>
-                <h1>${otp}</h1>
+                <h2>Wanderlust Verification</h2>
+                <p>Your OTP:</p>
+                <h1 style="letter-spacing:6px">${otp}</h1>
                 <p>This OTP expires in 5 minutes.</p>
-            `,
+            `
         });
 
-        console.log("Brevo SMTP Email sent successfully!");
+        console.log("Email sent successfully!", info.messageId);
 
-    } catch (error) {
-        console.error("Brevo SMTP Error:", error);
+    } catch (err) {
+        console.error("SMTP Email Error >>>", err);
         throw new Error("Email sending failed");
     }
 }
