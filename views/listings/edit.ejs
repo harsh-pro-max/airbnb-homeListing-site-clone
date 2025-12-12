@@ -1,67 +1,83 @@
 <% layout("/layouts/boilerplate.ejs") %>
+
 <body>
   <div class="row">
     <div class="col-8 offset-2">
+
       <br>
       <h3>Edit your Listing</h3>
 
       <form 
         method="POST" 
-        action="/listings/<%= listing._id %>?_method=PUT" 
-        novalidate 
+        action="/listings/<%= listing._id %>?_method=PUT"
+        enctype="multipart/form-data"
         class="needs-validation"
-        enctype="multipart/form-data" 
+        novalidate
       >
+
+        <!-- Title -->
         <div class="mb-3">
-          <label for="title" class="form-label">Title</label>
+          <label class="form-label">Title</label>
           <input type="text" name="listing[title]" value="<%= listing.title %>" class="form-control" required>
-          <div class="valid-feedback">Please enter a valid title</div>
         </div>
 
+        <!-- Description -->
         <div class="mb-3">
-          <label for="description" class="form-label">Description</label>
+          <label class="form-label">Description</label>
           <textarea name="listing[description]" class="form-control" required><%= listing.description %></textarea>
-
-          <div class="invalid-feedback">Please enter a short description</div>
-        </div>
-<!-- image prevew -->
-        <div class="mb-3">
-          Original Listing Image <br>
-          <img src="<%= originalImageUrl %>">  
         </div>
 
+        <!-- Existing Image -->
         <div class="mb-3">
-          <label for="image" class="form-label">Upload New Image</label>
-          <input 
-            type="file" 
-            name="listing[image]" 
-            class="form-control">
+          <label class="form-label">Existing Image</label><br>
+          <img src="<%= originalImageUrl %>" width="300" height="200" style="border-radius:10px;">
+        </div>
+
+        <!-- Upload New Image -->
+        <div class="mb-3">
+          <label class="form-label">Upload New Image</label>
+          <input type="file" name="listing[image]" class="form-control">
+        </div>
+
+        <!-- Category -->
+        <div class="mb-3">
+          <label class="form-label">Category</label>
+          <select name="listing[category]" class="form-control" required>
+            <option disabled>Select category</option>
+
+            <% categories.forEach(cat => { %>
+              <option value="<%= cat %>" <%= listing.category === cat ? "selected" : "" %>>
+                <%= cat %>
+              </option>
+            <% }) %>
+          </select>
         </div>
 
         <div class="row">
-          <div class="mb-3 col-12 col-md-4">
-            <label for="price" class="form-label">Price</label>
+
+          <!-- Price -->
+          <div class="mb-3 col-md-4">
+            <label class="form-label">Price</label>
             <input name="listing[price]" value="<%= listing.price %>" class="form-control" required>
-            <div class="invalid-feedback">Please enter a valid price</div>
           </div>
 
-          <div class="mb-3 col-12 col-md-8">
-            <label for="country" class="form-label">Country</label>
+          <!-- Country -->
+          <div class="mb-3 col-md-8">
+            <label class="form-label">Country</label>
             <input type="text" name="listing[country]" value="<%= listing.country %>" class="form-control" required>
-            <div class="invalid-feedback">country should be valid</div>
           </div>
         </div>
 
+        <!-- Location -->
         <div class="mb-3">
-          <label for="location" class="form-label">Location</label>
+          <label class="form-label">Location</label>
           <input type="text" name="listing[location]" value="<%= listing.location %>" class="form-control" required>
-          <div class="invalid-feedback">location should be valid</div>
         </div>
 
         <button class="btn btn-dark add-btn">Edit</button>
         <br><br>
+
       </form>
     </div>
   </div>
 </body>
-<!-- <script src="/js/script.js"></script> -->
