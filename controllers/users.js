@@ -50,7 +50,7 @@ module.exports.signup = async (req, res) => {
       <p style="color: gray;">– Wanderlust Team</p>
     `;
     await sendEmail(email, "Wanderlust OTP Verification Code", html);
-
+ 
 
     req.flash("success", "OTP sent to your email. Verify to continue.");
     res.redirect(`/verify-otp?user=${registeredUser._id}`);
