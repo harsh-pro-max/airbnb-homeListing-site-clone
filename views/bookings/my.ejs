@@ -1,0 +1,40 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container mt-5">
+  <h2>My Bookings</h2>
+  <hr />
+
+  <% if (bookings.length === 0) { %>
+    <p>No bookings yet.</p>
+  <% } else { %>
+    <% bookings.forEach(booking => { %>
+      <div class="card mb-3">
+        <div class="card-body">
+
+          <% if (booking.listing) { %>
+            <h5 class="card-title"><%= booking.listing.title %></h5>
+            <p class="card-text">
+              <strong>Location:</strong> <%= booking.listing.location %>, <%= booking.listing.country %><br/>
+              <strong>Price:</strong> ₹<%= booking.totalPrice.toLocaleString("en-IN") %><br/>
+              <strong>Check-In:</strong> <%= booking.checkIn.toDateString() %><br/>
+              <strong>Check-Out:</strong> <%= booking.checkOut.toDateString() %><br/>
+              <strong>Status:</strong> <%= booking.status %>
+            </p>
+          <% } else { %>
+            <h5 class="card-title text-danger">[Listing Deleted]</h5>
+            <p class="card-text">
+              <strong>Price:</strong> ₹<%= booking.totalPrice.toLocaleString("en-IN") %><br/>
+              <strong>Check-In:</strong> <%= booking.checkIn.toDateString() %><br/>
+              <strong>Check-Out:</strong> <%= booking.checkOut.toDateString() %><br/>
+              <strong>Status:</strong> <%= booking.status %>
+            </p>
+          <% } %>
+
+          <form action="/bookings/<%= booking._id %>?_method=DELETE" method="POST">
+            <button class="btn btn-danger btn-sm">Cancel Booking</button>
+          </form>
+        </div>
+      </div>
+    <% }) %>
+  <% } %>
+</div>

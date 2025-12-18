@@ -57,7 +57,7 @@ module.exports.createListing = async (req, res) => {
   newListing.image = { url, filename };
   newListing.geometry = response.body.features[0].geometry;
 
-  let savedListing = await newListing.save();
+  await newListing.save();
   req.flash("success", "New Listing Created!");
   res.redirect("/listings");
 };
@@ -83,7 +83,7 @@ module.exports.renderEditForm = async (req, res) => {
 module.exports.updateListing = async (req, res) => {
   const { id } = req.params;
 
-  let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+  const listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing }, { new: true });
 
   if (req.file) {
     listing.image = { 

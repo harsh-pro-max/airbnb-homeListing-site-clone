@@ -16,6 +16,7 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
+const bookingRouter = require("./routes/bookings.js");
 
 
 const listingRouter = require("./routes/listing.js");
@@ -105,6 +106,9 @@ app.get("/", (req, res) => {
 app.use("/listings",listingRouter);
 // use all review routes
 app.use("/listings/:id/reviews",reviewRouter);
+// use all bookings routes 
+app.use("/bookings", bookingRouter);
+
 app.use("/",userRouter);
 
 

@@ -1,0 +1,36 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="row mt-5">
+  <div class="col-md-6 offset-md-3">
+    <h2>Book "<%= listing.title %>"</h2>
+
+    <p class="text-muted">Rooms Available: <strong><%= listing.roomsAvailable %></strong></p>
+
+    <form action="/bookings/<%= listing._id %>/preview" method="POST">
+      <div class="mb-3">
+        <label for="checkIn" class="form-label">Check-In Date</label>
+        <input type="date" name="checkIn" id="checkIn" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="checkOut" class="form-label">Check-Out Date</label>
+        <input type="date" name="checkOut" id="checkOut" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="rooms" class="form-label">Number of Rooms</label>
+        <input 
+          type="number" 
+          name="rooms" 
+          id="rooms" 
+          class="form-control" 
+          min="1" 
+          max="<%= listing.roomsAvailable %>" 
+          required
+        >
+      </div>
+
+      <button class="btn btn-primary">Review Booking</button>
+    </form>
+  </div>
+</div>

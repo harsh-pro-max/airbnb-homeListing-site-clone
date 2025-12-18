@@ -1,0 +1,26 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="row mt-5">
+  <div class="col-md-6 offset-md-3">
+    <h2 class="mb-4">Confirm Your Booking</h2>
+    <div class="card shadow-sm p-4">
+      <h4 class="mb-3"><%= listing.title %></h4>
+      <p><strong>Location:</strong> <%= listing.location %>, <%= listing.country %></p>
+      <p><strong>Price per Night:</strong> ₹<%= listing.price.toLocaleString("en-IN") %></p>
+      <p><strong>Rooms Booked:</strong> <%= rooms %></p>
+      <p><strong>Check-In:</strong> <%= new Date(checkIn).toLocaleDateString("en-IN", { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %></p>
+      <p><strong>Check-Out:</strong> <%= new Date(checkOut).toLocaleDateString("en-IN", { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %></p>
+      <p><strong>Total Nights:</strong> <%= totalDays %></p>
+      <p class="fw-bold fs-5 mt-3"><strong>Total Amount:</strong> ₹<%= totalPrice.toLocaleString("en-IN") %></p>
+
+      <form action="/bookings/<%= listing._id %>/confirm" method="POST" class="mt-4">
+        <input type="hidden" name="checkIn" value="<%= checkIn %>">
+        <input type="hidden" name="checkOut" value="<%= checkOut %>">
+        <input type="hidden" name="rooms" value="<%= rooms %>">
+
+        <button class="btn btn-success w-100 mb-2">Pay & Confirm Booking</button>
+        <a href="/listings/<%= listing._id %>" class="btn btn-outline-secondary w-100">Cancel</a>
+      </form>
+    </div>
+  </div>
+</div>
