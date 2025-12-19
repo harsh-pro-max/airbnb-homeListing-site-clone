@@ -16,6 +16,7 @@
             <p class="card-text">
               <strong>Location:</strong> <%= booking.listing.location %>, <%= booking.listing.country %><br/>
               <strong>Price:</strong> ₹<%= booking.totalPrice.toLocaleString("en-IN") %><br/>
+              <strong>Booked by:</strong> <%= booking.user?.name || booking.user?.username || "Unknown" %><br/>
               <strong>Check-In:</strong> <%= booking.checkIn.toDateString() %><br/>
               <strong>Check-Out:</strong> <%= booking.checkOut.toDateString() %><br/>
               <strong>Status:</strong> <%= booking.status %>

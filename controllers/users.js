@@ -1,4 +1,3 @@
-// controllers/users.js
 const User = require("../models/user");
 const sendEmail = require("../utils/sendEmail");
 const util = require("util");
@@ -13,9 +12,10 @@ module.exports.renderSignup = (req, res) => {
 
 module.exports.signup = async (req, res) => {
   try {
-    let { username, email, password } = req.body;
+    let { name, username, email, password } = req.body;
 
     const newUser = new User({
+      name,
       email,
       username,
       isVerified: false,
@@ -30,7 +30,7 @@ module.exports.signup = async (req, res) => {
 
     // Send OTP email (signup verification)
     const html = `
-      <h2>Welcome to Wanderlust, ${username} 👋</h2>
+      <h2>Welcome to Wanderlust, ${name} 👋</h2>
     
       <p>Thank you for creating an account!</p>
     
@@ -50,7 +50,6 @@ module.exports.signup = async (req, res) => {
       <p style="color: gray;">– Wanderlust Team</p>
     `;
     await sendEmail(email, "Wanderlust OTP Verification Code", html);
- 
 
     req.flash("success", "OTP sent to your email. Verify to continue.");
     res.redirect(`/verify-otp?user=${registeredUser._id}`);
@@ -59,6 +58,8 @@ module.exports.signup = async (req, res) => {
     res.redirect("/signup");
   }
 };
+
+// Remaining unchanged sections...
 
 module.exports.renderVerifyOTP = (req, res) => {
   res.render("users/verifyOtp", { userId: req.query.user });
@@ -90,9 +91,7 @@ module.exports.verifyOTP = async (req, res, next) => {
   });
 };
 
-/* ================================
-            RESEND OTP
-================================ */
+/* ============= RESEND OTP ============= */
 
 module.exports.resendOTP = async (req, res) => {
   const { id } = req.params;
@@ -120,9 +119,7 @@ module.exports.resendOTP = async (req, res) => {
   res.redirect(`/verify-otp?user=${user._id}`);
 };
 
-/* ================================
-            LOGIN / LOGOUT
-================================ */
+/* ============= LOGIN / LOGOUT ============= */
 
 module.exports.renderLoginForm = (req, res) => {
   res.render("users/login.ejs");
@@ -147,9 +144,7 @@ module.exports.logout = (req, res, next) => {
   });
 };
 
-/* ================================
-     PASSWORD RESET (OTP BASED)
-================================ */
+/* ============= PASSWORD RESET (OTP BASED) ============= */
 
 module.exports.renderForgotPassword = (req, res) => {
   res.render("users/forgotPassword.ejs");

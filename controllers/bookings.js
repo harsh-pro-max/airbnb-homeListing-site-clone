@@ -1,7 +1,7 @@
 const Booking = require("../models/booking");
 const Listing = require("../models/listing");
-const User = require("../models/user"); // ✅ Needed to get owner info
-const sendBookingEmail = require("../utils/sendBookingEmail"); // ✅ Email utility
+const User = require("../models/user"); // For owner and user email data
+const sendBookingEmail = require("../utils/sendBookingEmail"); // Email utility
 
 module.exports.renderBookingForm = async (req, res) => {
   const { id } = req.params;
@@ -51,7 +51,7 @@ module.exports.previewBooking = async (req, res) => {
   });
 };
 
-// ✅ Confirm Final Booking + Email
+// ✅ Confirm Final Booking + Send Email
 module.exports.confirmBooking = async (req, res) => {
   const { id } = req.params;
   const { checkIn, checkOut, rooms } = req.body;
@@ -87,14 +87,19 @@ module.exports.confirmBooking = async (req, res) => {
   await listing.save();
   await booking.save();
 
-  // ✅ Send booking emails
-  const owner = listing.owner;
-  const user = req.user;
-
+  // 📧 Send booking email to both user and owner
   try {
-    await sendBookingEmail({ user, owner, listing, booking });
+    const user = await User.findById(req.user._id); // latest user object
+    const owner = listing.owner;
+
+    await sendBookingEmail({
+      user,
+      owner,
+      listing,
+      booking
+    });
   } catch (err) {
-    console.error("Email Error:", err.message);
+    console.error("📧 Email send failed:", err.message);
   }
 
   req.flash("success", `Dummy Payment of ₹${totalPrice} completed! Booking confirmed.`);
@@ -105,6 +110,7 @@ module.exports.confirmBooking = async (req, res) => {
 module.exports.getMyBookings = async (req, res) => {
   const bookings = await Booking.find({ user: req.user._id })
     .populate("listing")
+    .populate("user") 
     .sort({ createdAt: -1 });
 
   res.render("bookings/my", { bookings });
