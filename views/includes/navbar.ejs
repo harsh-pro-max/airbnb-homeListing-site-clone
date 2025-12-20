@@ -1,5 +1,4 @@
 <style>
-  /* SEARCH BUTTON */
   .search-btn {
     background-color: #fe424d;
     color: #fff;
@@ -15,18 +14,17 @@
     margin-right: 0.5rem;
   }
 
-  /* BIGGER SEARCH INPUT */
   .search-inp {
     border-radius: 25px;
     padding: 0.7rem 1.5rem;
-    width: 400px;       /* SEARCH BAR BIGGER */
-    max-width: 65vw;    /* RESPONSIVE */
+    width: 400px;
+    max-width: 65vw;
     font-size: 1rem;
   }
 
   @media (max-width: 768px) {
     .search-inp {
-      width: 250px;  /* smaller on mobile */
+      width: 250px;
     }
   }
 </style>
@@ -73,10 +71,18 @@
         <% if (!currUser) { %>
           <a class="nav-link" href="/signup"><b>Sign up</b></a>
           <a class="nav-link" href="/login"><b>Log in</b></a>
-        <% } %>
-
-        <% if (currUser) { %>
-          <a class="nav-link" href="/logout"><b>Log out</b></a>
+        <% } else { %>
+          <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              <i class="fa-solid fa-user"></i> <%= currUser.name || currUser.username %>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/dashboard">Dashboard</a></li>
+              <li><a class="dropdown-item" href="/bookings/my">My Bookings</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="/logout">Log out</a></li>
+            </ul>
+          </div>
         <% } %>
       </div>
 

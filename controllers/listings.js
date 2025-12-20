@@ -20,6 +20,15 @@ module.exports.index = async (req, res) => {
   res.render("listings/index.ejs", { allListings });
 };
 
+// ✅ MY LISTINGS CONTROLLER
+module.exports.renderMyListings = async (req, res) => {
+  const userId = req.user._id;
+
+  const listings = await Listing.find({ owner: userId });
+
+  res.render("listings/my.ejs", { listings });
+};
+
 module.exports.renderNewForm = (req, res) => {
   res.render("listings/new.ejs", { categories: allCategories });
 };

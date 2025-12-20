@@ -1,19 +1,26 @@
 const Booking = require("../models/booking");
 const Listing = require("../models/listing");
-const User = require("../models/user"); // For owner and user email data
-const sendBookingEmail = require("../utils/sendBookingEmail"); // Email utility
+const User = require("../models/user");
+const sendBookingEmail = require("../utils/sendBookingEmail");
 
+// =====================
+// NEW BOOKING FORM
+// =====================
 module.exports.renderBookingForm = async (req, res) => {
   const { id } = req.params;
   const listing = await Listing.findById(id);
+
   if (!listing) {
     req.flash("error", "Listing not found!");
     return res.redirect("/listings");
   }
+
   res.render("bookings/new", { listing });
 };
 
-// ✅ Preview Booking Page
+// =====================
+// PREVIEW BOOKING
+// =====================
 module.exports.previewBooking = async (req, res) => {
   const { id } = req.params;
   const { checkIn, checkOut, rooms } = req.body;
@@ -38,7 +45,10 @@ module.exports.previewBooking = async (req, res) => {
     return res.redirect(`/bookings/${id}/new`);
   }
 
-  const totalDays = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
+  const totalDays = Math.ceil(
+    (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
+  );
+
   const totalPrice = listing.price * totalDays * roomCount;
 
   res.render("bookings/preview", {
@@ -51,7 +61,9 @@ module.exports.previewBooking = async (req, res) => {
   });
 };
 
-// ✅ Confirm Final Booking + Send Email
+// =====================
+// CONFIRM BOOKING
+// =====================
 module.exports.confirmBooking = async (req, res) => {
   const { id } = req.params;
   const { checkIn, checkOut, rooms } = req.body;
@@ -63,14 +75,13 @@ module.exports.confirmBooking = async (req, res) => {
   }
 
   const roomCount = parseInt(rooms);
-  if (roomCount > listing.roomsAvailable) {
-    req.flash("error", `Only ${listing.roomsAvailable} rooms are available.`);
-    return res.redirect(`/bookings/${id}/new`);
-  }
-
   const checkInDate = new Date(checkIn);
   const checkOutDate = new Date(checkOut);
-  const totalDays = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
+
+  const totalDays = Math.ceil(
+    (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
+  );
+
   const totalPrice = listing.price * totalDays * roomCount;
 
   const booking = new Booking({
@@ -87,36 +98,37 @@ module.exports.confirmBooking = async (req, res) => {
   await listing.save();
   await booking.save();
 
-  // 📧 Send booking email to both user and owner
   try {
-    const user = await User.findById(req.user._id); // latest user object
-    const owner = listing.owner;
-
+    const user = await User.findById(req.user._id);
     await sendBookingEmail({
       user,
-      owner,
+      owner: listing.owner,
       listing,
-      booking
+      booking,
     });
   } catch (err) {
-    console.error("📧 Email send failed:", err.message);
+    console.error("Email error:", err.message);
   }
 
-  req.flash("success", `Dummy Payment of ₹${totalPrice} completed! Booking confirmed.`);
+  req.flash("success", "Booking confirmed!");
   res.redirect("/bookings/my");
 };
 
-// ✅ Show Logged-in User's Bookings
+// =====================
+// ✅ MY BOOKINGS (FINAL FIX)
+// =====================
 module.exports.getMyBookings = async (req, res) => {
   const bookings = await Booking.find({ user: req.user._id })
     .populate("listing")
-    .populate("user") 
     .sort({ createdAt: -1 });
 
-  res.render("bookings/my", { bookings });
+  // 🔥 THIS LINE WAS THE REAL ISSUE
+  res.render("users/myBookings", { bookings });
 };
 
-// ✅ Cancel a Booking
+// =====================
+// CANCEL BOOKING
+// =====================
 module.exports.cancelBooking = async (req, res) => {
   const { id } = req.params;
   const booking = await Booking.findById(id).populate("listing");
@@ -134,10 +146,8 @@ module.exports.cancelBooking = async (req, res) => {
   booking.status = "cancelled";
   await booking.save();
 
-  if (booking.listing && booking.roomsBooked) {
-    booking.listing.roomsAvailable += booking.roomsBooked;
-    await booking.listing.save();
-  }
+  booking.listing.roomsAvailable += booking.roomsBooked;
+  await booking.listing.save();
 
   req.flash("success", "Booking cancelled.");
   res.redirect("/bookings/my");

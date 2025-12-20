@@ -9,6 +9,15 @@ const multer = require("multer");
 const { storage } = require("../cloudConfig.js");
 const upload = multer({ storage });
 
+// ===========================
+//        MY LISTINGS
+// ===========================
+router.get(
+  "/my",
+  isLoggedIn,
+  wrapAsync(listingController.renderMyListings)
+);
+
 // INDEX + CREATE
 router
   .route("/")

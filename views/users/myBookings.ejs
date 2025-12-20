@@ -1,0 +1,75 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container mt-4">
+  <h2 class="mb-4">
+    <i class="fa-solid fa-book"></i> My Bookings
+  </h2>
+
+  <% if (bookings.length === 0) { %>
+    <p class="text-muted">You have not made any bookings yet.</p>
+  <% } else { %>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Listing</th>
+            <th>Location</th>
+            <th>Check-In</th>
+            <th>Check-Out</th>
+            <th>Rooms</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% bookings.forEach(b => { %>
+            <tr>
+              <td>
+                <% if (b.listing) { %>
+                  <a href="/listings/<%= b.listing._id %>" class="text-decoration-none">
+                    <%= b.listing.title %>
+                  </a>
+                <% } else { %>
+                  <span class="text-muted">[Deleted]</span>
+                <% } %>
+              </td>
+
+              <td><%= b.listing?.location || "N/A" %></td>
+              <td><%= b.checkIn.toDateString() %></td>
+              <td><%= b.checkOut.toDateString() %></td>
+              <td><%= b.roomsBooked %></td>
+              <td>₹<%= b.totalPrice.toLocaleString("en-IN") %></td>
+
+              <td>
+                <span class="badge 
+                  <%= b.status === "cancelled" ? "bg-danger" : "bg-success" %>">
+                  <%= b.status %>
+                </span>
+              </td>
+
+              <td>
+                <% if (b.status !== "cancelled") { %>
+                  <form 
+                    action="/bookings/<%= b._id %>?_method=DELETE" 
+                    method="POST"
+                    onsubmit="return confirm('Cancel this booking?');"
+                  >
+                    <button class="btn btn-sm btn-outline-danger">
+                      Cancel
+                    </button>
+                  </form>
+                <% } else { %>
+                  <span class="text-muted">—</span>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+  <% } %>
+</div>

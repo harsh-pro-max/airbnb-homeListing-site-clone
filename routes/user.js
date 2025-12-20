@@ -1,10 +1,14 @@
-// routes/user.js
 const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync");
 const passport = require("passport");
-
 const userController = require("../controllers/users.js");
+const { isLoggedIn } = require("../middleware");
+
+// ✅ Add multer + cloudinary upload
+const multer = require("multer");
+const { storage } = require("../cloudConfig");
+const upload = multer({ storage });
 
 // SIGNUP
 router
@@ -36,18 +40,24 @@ router
 // LOGOUT
 router.get("/logout", userController.logout);
 
-/* ===== Password reset routes ===== */
-
-// show form to enter email to start reset
+// PASSWORD RESET
 router.get("/forgot-password", userController.renderForgotPassword);
-
-// post email -> send OTP and redirect to reset form
 router.post("/forgot-password", wrapAsync(userController.sendResetOTP));
-
-// render reset form (userId passed as query ?user=XXXX)
 router.get("/reset-password", userController.renderResetPassword);
-
-// submit reset form (otp + new password + userId in body)
 router.post("/reset-password", wrapAsync(userController.resetPassword));
+
+// ✅ USER DASHBOARD
+router.get("/dashboard", isLoggedIn, wrapAsync(userController.renderDashboard));
+
+// ✅ EDIT PROFILE PAGE
+router.get("/edit-profile", isLoggedIn, wrapAsync(userController.renderEditProfile));
+
+// ✅ UPDATE PROFILE (avatar + name)
+router.post(
+  "/users/update-profile",
+  isLoggedIn,
+  upload.single("avatar"),
+  wrapAsync(userController.updateProfile)
+);
 
 module.exports = router;

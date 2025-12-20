@@ -11,6 +11,10 @@ const userSchema = new Schema({
         type: Boolean,
         default: false
     },
+    avatar: {
+        url: String,
+        filename: String
+    },
     otp: String,
     otpExpiry: Date
 });
