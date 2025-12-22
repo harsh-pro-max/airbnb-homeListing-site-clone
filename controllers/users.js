@@ -240,19 +240,17 @@ module.exports.renderDashboard = async (req, res) => {
 module.exports.renderEditProfile = async (req, res) => {
   res.render("users/editProfile", { user: req.user });
 };
-
 /* ===== UPDATE AVATAR + NAME (Combined Save) ===== */
 module.exports.updateProfile = async (req, res) => {
   const user = req.user;
 
-  // Update name if provided
+  // Update name
   if (req.body.name) {
     user.name = req.body.name;
   }
 
-  // If new avatar is uploaded
+  // Update avatar
   if (req.file) {
-    // Remove old avatar from Cloudinary
     if (user.avatar && user.avatar.filename) {
       try {
         await cloudinary.uploader.destroy(user.avatar.filename);
@@ -261,7 +259,6 @@ module.exports.updateProfile = async (req, res) => {
       }
     }
 
-    // Set new avatar
     user.avatar = {
       url: req.file.path,
       filename: req.file.filename,
@@ -269,6 +266,19 @@ module.exports.updateProfile = async (req, res) => {
   }
 
   await user.save();
-  req.flash("success", "Profile updated successfully.");
-  res.redirect("/dashboard");
+
+  // 🔥 STEP 1: Refresh passport session
+  req.login(user, (err) => {
+    if (err) {
+      console.error("Session refresh error:", err);
+      req.flash("error", "Profile updated but session failed.");
+      return res.redirect("/dashboard");
+    }
+
+    // 🔥 STEP 2: Update locals manually (IMPORTANT)
+    res.locals.currentUser = user;
+
+    req.flash("success", "Profile updated successfully.");
+    res.redirect("/dashboard");
+  });
 };
